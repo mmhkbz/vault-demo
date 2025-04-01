@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    ports:
+      - "8200:8200"
+    cap_add:
+      - IPC_LOCK
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200" # Address Vault listens on
+      VAULT_DEV_ROOT_TOKEN_ID: "myroot"  # ONLY FOR DEVELOPMENT -  Define a root token
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+    volumes:
+      - vault_data:/vault/data  # Persist Vault data
+
+    # For development, you can use command below.  For production, you'd need a proper config.hcl
+    command: vault server -dev -dev-listen-address=0.0.0.0:8200
+
+volumes:
+  vault_data: # Named volume for persistent data storage
